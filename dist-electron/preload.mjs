@@ -1,5 +1,8 @@
 "use strict";
 const electron = require("electron");
+const electronAPI = {
+  callLMStudioAPI: (params) => electron.ipcRenderer.invoke("call-lm-studio-api", params)
+};
 electron.contextBridge.exposeInMainWorld("ipcRenderer", {
   on(...args) {
     const [channel, listener] = args;
@@ -20,3 +23,4 @@ electron.contextBridge.exposeInMainWorld("ipcRenderer", {
   // You can expose other APTs you need here.
   // ...
 });
+electron.contextBridge.exposeInMainWorld("electronAPI", electronAPI);

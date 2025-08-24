@@ -24,4 +24,11 @@ declare namespace NodeJS {
 // Used in Renderer process, expose in `preload.ts`
 interface Window {
   ipcRenderer: import('electron').IpcRenderer
+  electronAPI: {
+    callLMStudioAPI: (params: {
+      endpoint: string
+      method: string
+      body?: any
+    }) => Promise<any>
+  }
 }
