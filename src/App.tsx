@@ -209,140 +209,31 @@ function App() {
     }
   }
 
-  // アプリケーション全体のスタイル
-  const appStyle: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '100vw',
-    height: '100vh',
-    backgroundColor: '#f3f4f6',
-    overflow: 'hidden',
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
-  }
-
-  // ヘッダーのスタイル
-  const headerStyle: React.CSSProperties = {
-    background: 'linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%)',
-    color: 'white',
-    padding: '16px',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-    flexShrink: 0
-  }
-
-  // 設定パネルのスタイル
-  const configPanelStyle: React.CSSProperties = {
-    backgroundColor: 'white',
-    padding: '16px',
-    borderBottom: '1px solid #e5e7eb',
-    boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
-    flexShrink: 0
-  }
-
-  // メッセージエリアのスタイル
-  const messagesAreaStyle: React.CSSProperties = {
-    flex: 1,
-    overflowY: 'auto',
-    padding: '16px',
-    minHeight: 0,
-    scrollbarWidth: 'thin'
-  }
-
-  // 入力エリアのスタイル
-  const inputAreaStyle: React.CSSProperties = {
-    backgroundColor: 'white',
-    padding: '16px',
-    borderTop: '1px solid #e5e7eb',
-    boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1)',
-    flexShrink: 0
-  }
-
-  // ボタンの基本スタイル
-  const buttonBaseStyle: React.CSSProperties = {
-    padding: '8px 12px',
-    borderRadius: '6px',
-    border: 'none',
-    fontSize: '14px',
-    fontWeight: '500',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease-in-out',
-    fontFamily: 'inherit'
-  }
-
-  // ヘッダーボタンのスタイル
-  const headerButtonStyle: React.CSSProperties = {
-    ...buttonBaseStyle,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    color: 'white',
-    marginLeft: '8px'
-  }
-
-  // 送信ボタンのスタイル
-  const sendButtonStyle: React.CSSProperties = {
-    ...buttonBaseStyle,
-    backgroundColor: isLoading || !input.trim() ? '#9ca3af' : '#3b82f6',
-    color: 'white',
-    padding: '10px 24px',
-    cursor: isLoading || !input.trim() ? 'not-allowed' : 'pointer'
-  }
-
-  // テキストエリアのスタイル
-  const textareaStyle: React.CSSProperties = {
-    flex: 1,
-    border: '1px solid #d1d5db',
-    borderRadius: '8px',
-    padding: '8px 12px',
-    resize: 'none',
-    outline: 'none',
-    fontSize: '14px',
-    lineHeight: '1.5',
-    minHeight: '40px',
-    maxHeight: '128px',
-    fontFamily: 'inherit',
-    marginRight: '12px'
-  }
-
-  // 入力フィールドのスタイル
-  const inputFieldStyle: React.CSSProperties = {
-    width: '100%',
-    border: '1px solid #d1d5db',
-    borderRadius: '6px',
-    padding: '8px 12px',
-    fontSize: '14px',
-    outline: 'none',
-    fontFamily: 'inherit'
-  }
-
   return (
-    <div style={appStyle}>
+    <div className="flex flex-col w-screen h-screen bg-gray-100 overflow-hidden font-sans">
       {/* Header */}
-      <div style={headerStyle}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 shadow-lg shrink-0">
+        <div className="flex justify-between items-center">
           <div>
-            <h1 style={{ fontSize: '20px', fontWeight: 'bold', margin: 0 }}>LM Studio Chat</h1>
+            <h1 className="text-xl font-bold m-0">LM Studio Chat</h1>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div className="flex items-center gap-2">
             <button
               onClick={toggleConfigPanel}
-              style={headerButtonStyle}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.3)'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)'}
+              className="px-3 py-2 bg-white/20 hover:bg-white/30 text-white rounded-md text-sm font-medium transition-colors duration-200"
             >
               {showConfig ? '閉じる' : '設定'}
             </button>
             <button
               onClick={testConnection}
-              style={{...headerButtonStyle, opacity: isLoading ? 0.6 : 1}}
               disabled={isLoading}
-              onMouseEnter={(e) => !isLoading && (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.3)')}
-              onMouseLeave={(e) => !isLoading && (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)')}
+              className="px-3 py-2 bg-white/20 hover:bg-white/30 text-white rounded-md text-sm font-medium transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               接続テスト
             </button>
             <button
               onClick={clearChat}
-              style={headerButtonStyle}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.3)'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)'}
+              className="px-3 py-2 bg-white/20 hover:bg-white/30 text-white rounded-md text-sm font-medium transition-colors duration-200"
             >
               クリア
             </button>
@@ -352,10 +243,10 @@ function App() {
 
       {/* Config Panel */}
       {showConfig && (
-        <div style={configPanelStyle}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px', marginBottom: '16px' }}>
+        <div className="bg-white p-4 border-b border-gray-200 shadow-sm shrink-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
             <div>
-              <label style={{ display: 'block', fontWeight: '500', fontSize: '14px', marginBottom: '8px' }}>
+              <label className="block font-medium text-sm mb-2">
                 API URL:
               </label>
               <input
@@ -363,47 +254,29 @@ function App() {
                 value={tempConfig.baseUrl}
                 onChange={(e) => setTempConfig({...tempConfig, baseUrl: e.target.value})}
                 placeholder={DEFAULT_CONFIG.baseUrl}
-                style={inputFieldStyle}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
-              <p style={{ fontSize: '12px', color: '#6b7280', margin: '4px 0 0 0' }}>
+              <p className="text-xs text-gray-500 mt-1">
                 空の場合: {DEFAULT_CONFIG.baseUrl} を使用
               </p>
             </div>
           </div>
-          <div style={{ display: 'flex', gap: '8px' }}>
+          <div className="flex gap-2">
             <button
               onClick={saveConfig}
-              style={{
-                ...buttonBaseStyle,
-                backgroundColor: '#3b82f6',
-                color: 'white'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2563eb'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3b82f6'}
+              className="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-sm font-medium transition-colors duration-200"
             >
               保存
             </button>
             <button
               onClick={resetConfig}
-              style={{
-                ...buttonBaseStyle,
-                backgroundColor: '#6b7280',
-                color: 'white'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4b5563'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#6b7280'}
+              className="px-3 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md text-sm font-medium transition-colors duration-200"
             >
               デフォルトに戻す
             </button>
             <button
               onClick={() => setShowConfig(false)}
-              style={{
-                ...buttonBaseStyle,
-                backgroundColor: '#d1d5db',
-                color: '#374151'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#9ca3af'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#d1d5db'}
+              className="px-3 py-2 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-md text-sm font-medium transition-colors duration-200"
             >
               キャンセル
             </button>
@@ -412,86 +285,42 @@ function App() {
       )}
 
       {/* Chat Messages */}
-      <div style={messagesAreaStyle}>
+      <div className="flex-1 overflow-y-auto p-4 min-h-0 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
         {messages.length === 0 && (
-          <div style={{ textAlign: 'center', color: '#6b7280', marginTop: '40px' }}>
-            <p style={{ fontSize: '18px', margin: 0 }}>会話を開始しましょう！</p>
+          <div className="text-center text-gray-500 mt-10">
+            <p className="text-lg m-0">会話を開始しましょう！</p>
           </div>
         )}
         {messages.map((message) => (
           <div
             key={message.id}
-            style={{
-              display: 'flex',
-              justifyContent: message.role === 'user' ? 'flex-end' : 'flex-start',
-              marginBottom: '16px'
-            }}
+            className={`flex mb-4 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              style={{
-                maxWidth: '70%',
-                padding: '12px 16px',
-                borderRadius: '12px',
-                boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
-                backgroundColor: message.role === 'user' ? '#3b82f6' : 'white',
-                color: message.role === 'user' ? 'white' : '#1f2937',
-                border: message.role === 'assistant' ? '1px solid #e5e7eb' : 'none',
-                borderBottomRightRadius: message.role === 'user' ? '4px' : '12px',
-                borderBottomLeftRadius: message.role === 'assistant' ? '4px' : '12px'
-              }}
+              className={`max-w-[70%] px-4 py-3 rounded-xl shadow-sm ${
+                message.role === 'user' 
+                  ? 'bg-blue-500 text-white rounded-br-sm' 
+                  : 'bg-white text-gray-800 border border-gray-200 rounded-bl-sm'
+              }`}
             >
-              <div style={{
-                whiteSpace: 'pre-wrap',
-                wordBreak: 'break-word',
-                fontSize: '14px',
-                lineHeight: '1.5'
-              }}>
+              <div className="whitespace-pre-wrap break-words text-sm leading-relaxed">
                 {message.content}
               </div>
-              <div style={{
-                fontSize: '12px',
-                marginTop: '8px',
-                color: message.role === 'user' ? 'rgba(255, 255, 255, 0.7)' : '#6b7280'
-              }}>
+              <div className={`text-xs mt-2 ${
+                message.role === 'user' ? 'text-white/70' : 'text-gray-500'
+              }`}>
                 {message.timestamp.toLocaleTimeString()}
               </div>
             </div>
           </div>
         ))}
         {isLoading && (
-          <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '16px' }}>
-            <div style={{
-              backgroundColor: 'white',
-              color: '#1f2937',
-              maxWidth: '70%',
-              padding: '12px 16px',
-              borderRadius: '12px',
-              borderBottomLeftRadius: '4px',
-              border: '1px solid #e5e7eb',
-              boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <div style={{
-                  width: '8px',
-                  height: '8px',
-                  backgroundColor: '#9ca3af',
-                  borderRadius: '50%',
-                  animation: 'bounce 1.4s infinite ease-in-out'
-                }}></div>
-                <div style={{
-                  width: '8px',
-                  height: '8px',
-                  backgroundColor: '#9ca3af',
-                  borderRadius: '50%',
-                  animation: 'bounce 1.4s infinite ease-in-out 0.16s'
-                }}></div>
-                <div style={{
-                  width: '8px',
-                  height: '8px',
-                  backgroundColor: '#9ca3af',
-                  borderRadius: '50%',
-                  animation: 'bounce 1.4s infinite ease-in-out 0.32s'
-                }}></div>
+          <div className="flex justify-start mb-4">
+            <div className="bg-white text-gray-800 max-w-[70%] px-4 py-3 rounded-xl rounded-bl-sm border border-gray-200 shadow-sm">
+              <div className="flex items-center gap-1">
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:0ms]"></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:160ms]"></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:320ms]"></div>
               </div>
             </div>
           </div>
@@ -500,8 +329,8 @@ function App() {
       </div>
 
       {/* Input Area */}
-      <div style={inputAreaStyle}>
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-end' }}>
+      <div className="bg-white p-4 border-t border-gray-200 shadow-lg shrink-0">
+        <div className="flex gap-3 items-end">
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -509,46 +338,17 @@ function App() {
             placeholder="メッセージを入力してください... (Enter: 送信, Shift+Enter: 改行)"
             disabled={isLoading}
             rows={2}
-            style={{
-              ...textareaStyle,
-              opacity: isLoading ? 0.6 : 1
-            }}
-            onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-            onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+            className="flex-1 border border-gray-300 rounded-lg px-3 py-2 resize-none outline-none text-sm leading-relaxed min-h-[40px] max-h-32 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-60 disabled:bg-gray-50"
           />
           <button
             onClick={sendMessage}
             disabled={!input.trim() || isLoading}
-            style={sendButtonStyle}
-            onMouseEnter={(e) => {
-              if (!isLoading && input.trim()) {
-                e.currentTarget.style.backgroundColor = '#2563eb'
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!isLoading && input.trim()) {
-                e.currentTarget.style.backgroundColor = '#3b82f6'
-              }
-            }}
+            className="px-6 py-2.5 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium transition-colors duration-200"
           >
             送信
           </button>
         </div>
       </div>
-
-      {/* CSS for bounce animation */}
-      <style>{`
-        @keyframes bounce {
-          0%, 80%, 100% {
-            transform: scale(0.8);
-            opacity: 0.5;
-          }
-          40% {
-            transform: scale(1);
-            opacity: 1;
-          }
-        }
-      `}</style>
     </div>
   )
 }
