@@ -53,7 +53,7 @@ function App() {
     scrollToBottom()
   }, [messages])
 
-  // 設定を保存する関数
+  // APIURL設定を保存する関数
   const saveConfig = () => {
     try {
       // 空文字列の場合はデフォルト値を使用
@@ -66,7 +66,6 @@ function App() {
       localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(finalConfig))
       setShowConfig(false)
       
-      // 成功メッセージを表示
       const successMessage: Message = {
         id: Date.now().toString(),
         role: 'assistant',
@@ -80,7 +79,7 @@ function App() {
     }
   }
 
-  // 設定をリセットする関数
+  // APIURL設定をリセットする関数
   const resetConfig = () => {
     setTempConfig(DEFAULT_CONFIG)
     setConfig(DEFAULT_CONFIG)
@@ -197,7 +196,7 @@ function App() {
         const connectionMessage: Message = {
           id: Date.now().toString(),
           role: 'assistant',
-          content: `✅ 接続成功！\n\nAPI URL: ${config.baseUrl}\n利用可能なモデル数: ${models.length}\nモデル一覧: ${modelList || 'なし'}`,
+          content: `接続成功！\n\nAPI URL: ${config.baseUrl}`,
           timestamp: new Date()
         }
         setMessages(prev => [...prev, connectionMessage])
@@ -209,7 +208,7 @@ function App() {
       const connectionErrorMessage: Message = {
         id: Date.now().toString(),
         role: 'assistant',
-        content: `❌ 接続エラー\n\nAPI URL: ${config.baseUrl}\nエラー内容: ${errorMsg}\n\n設定を確認してください。`,
+        content: `接続エラー\n\nAPI URL: ${config.baseUrl}\nエラー内容: ${errorMsg}\n\n設定を確認してください。`,
         timestamp: new Date()
       }
       setMessages(prev => [...prev, connectionErrorMessage])
@@ -225,9 +224,8 @@ function App() {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-xl font-bold">LM Studio Chat</h1>
-            <p className="text-xs opacity-80 mt-1">API: {config.baseUrl}</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 mr-4">
             <button
               onClick={toggleConfigPanel}
               className="px-3 py-1 bg-white bg-opacity-20 hover:bg-opacity-30 rounded transition-colors text-sm"
@@ -310,14 +308,8 @@ function App() {
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
         {messages.length === 0 && (
-          <div className="text-center text-gray-500 mt-8">
-            <p className="text-lg">LM Studioとの会話を開始しましょう！</p>
-            <p className="text-sm mt-2">まずは接続テストを実行してください。</p>
-            <div className="mt-4 p-4 bg-blue-50 rounded-lg text-left max-w-md mx-auto">
-              <h3 className="font-medium text-blue-900 mb-2">現在の設定:</h3>
-              <p className="text-sm text-blue-800">API URL: {config.baseUrl}</p>
-              <p className="text-sm text-blue-800">モデル名: {config.model}</p>
-            </div>
+          <div className="text-center text-gray-500">
+            <p className="text-lg">会話を開始しましょう！</p>
           </div>
         )}
         {messages.map((message) => (
