@@ -1,3 +1,21 @@
+# 環境構築
+1. node.jsをインストール
+2. node -v バージョンが表示されたらOK
+3. npm -v バージョンが表示されたらOK
+4. 適当な場所にクローンしてください
+5. npm i
+6. npm run devで起動できればOK
+
+# 起動方法
+1. LM studio起動
+2. npm run dev
+
+# 注意
+- ポートをデフォルトから変更している場合はアプリの「設定>API URL」から自分で設定してください
+- 
+
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
