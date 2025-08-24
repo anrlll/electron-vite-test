@@ -125,28 +125,28 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100">
+    <div className="flex flex-col w-full h-screen bg-gray-100 overflow-hidden">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 shadow-lg">
+      <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 shadow-lg flex-shrink-0">
         <div className="flex justify-between items-center">
           <h1 className="text-xl font-bold">LM Studio Chat</h1>
           <div className="flex gap-2">
             <button
               onClick={() => setShowConfig(!showConfig)}
-              className="px-3 py-1 bg-white bg-opacity-20 hover:bg-opacity-30 rounded transition-colors"
+              className="px-3 py-1 bg-white bg-opacity-20 hover:bg-opacity-30 rounded transition-colors text-sm"
             >
               設定
             </button>
             <button
               onClick={testConnection}
-              className="px-3 py-1 bg-white bg-opacity-20 hover:bg-opacity-30 rounded transition-colors"
+              className="px-3 py-1 bg-white bg-opacity-20 hover:bg-opacity-30 rounded transition-colors text-sm"
               disabled={isLoading}
             >
               接続テスト
             </button>
             <button
               onClick={clearChat}
-              className="px-3 py-1 bg-white bg-opacity-20 hover:bg-opacity-30 rounded transition-colors"
+              className="px-3 py-1 bg-white bg-opacity-20 hover:bg-opacity-30 rounded transition-colors text-sm"
             >
               クリア
             </button>
@@ -156,26 +156,26 @@ function App() {
 
       {/* Config Panel */}
       {showConfig && (
-        <div className="bg-white p-4 border-b border-gray-200 shadow-sm">
-          <div className="flex gap-4 items-center">
+        <div className="bg-white p-4 border-b border-gray-200 shadow-sm flex-shrink-0">
+          <div className="flex gap-4 items-center flex-wrap">
             <div className="flex items-center gap-2">
-              <label className="font-medium min-w-fit">ベースURL:</label>
+              <label className="font-medium min-w-fit text-sm">ベースURL:</label>
               <input
                 type="text"
                 value={config.baseUrl}
                 onChange={(e) => setConfig({...config, baseUrl: e.target.value})}
                 placeholder="http://localhost:1234"
-                className="border border-gray-300 rounded px-3 py-1 w-64"
+                className="border border-gray-300 rounded px-3 py-1 w-64 text-sm"
               />
             </div>
             <div className="flex items-center gap-2">
-              <label className="font-medium min-w-fit">モデル名:</label>
+              <label className="font-medium min-w-fit text-sm">モデル名:</label>
               <input
                 type="text"
                 value={config.model}
                 onChange={(e) => setConfig({...config, model: e.target.value})}
                 placeholder="local-model"
-                className="border border-gray-300 rounded px-3 py-1 w-48"
+                className="border border-gray-300 rounded px-3 py-1 w-48 text-sm"
               />
             </div>
           </div>
@@ -183,10 +183,10 @@ function App() {
       )}
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
         {messages.length === 0 && (
           <div className="text-center text-gray-500 mt-8">
-            <p>LM Studioとの会話を開始しましょう！</p>
+            <p className="text-lg">LM Studioとの会話を開始しましょう！</p>
             <p className="text-sm mt-2">まずは接続テストを実行してください。</p>
           </div>
         )}
@@ -196,14 +196,14 @@ function App() {
             className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+              className={`max-w-xs lg:max-w-md xl:max-w-lg px-4 py-3 rounded-lg shadow-sm ${
                 message.role === 'user'
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-200 text-gray-800'
+                  ? 'bg-blue-500 text-white rounded-br-sm'
+                  : 'bg-white text-gray-800 border border-gray-200 rounded-bl-sm'
               }`}
             >
-              <div className="whitespace-pre-wrap">{message.content}</div>
-              <div className={`text-xs mt-1 opacity-70`}>
+              <div className="whitespace-pre-wrap break-words text-sm leading-relaxed">{message.content}</div>
+              <div className={`text-xs mt-2 ${message.role === 'user' ? 'text-blue-100' : 'text-gray-500'}`}>
                 {message.timestamp.toLocaleTimeString()}
               </div>
             </div>
@@ -211,11 +211,11 @@ function App() {
         ))}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-gray-200 text-gray-800 max-w-xs lg:max-w-md px-4 py-2 rounded-lg">
+            <div className="bg-white text-gray-800 max-w-xs lg:max-w-md px-4 py-3 rounded-lg rounded-bl-sm border border-gray-200 shadow-sm">
               <div className="flex items-center space-x-1">
-                <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
               </div>
             </div>
           </div>
@@ -224,21 +224,25 @@ function App() {
       </div>
 
       {/* Input Area */}
-      <div className="bg-white p-4 border-t border-gray-200 shadow-lg">
-        <div className="flex gap-2">
+      <div className="bg-white p-4 border-t border-gray-200 shadow-lg flex-shrink-0">
+        <div className="flex gap-3 items-end">
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="メッセージを入力してください... (Enter: 送信, Shift+Enter: 改行)"
             disabled={isLoading}
-            rows={3}
-            className="flex-1 border border-gray-300 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            rows={2}
+            className="flex-1 border border-gray-300 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm leading-relaxed max-h-32 min-h-[2.5rem]"
+            style={{
+              scrollbarWidth: 'thin',
+              scrollbarColor: '#cbd5e1 transparent'
+            }}
           />
           <button
             onClick={sendMessage}
             disabled={!input.trim() || isLoading}
-            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors h-fit self-end"
+            className="px-6 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
           >
             送信
           </button>
