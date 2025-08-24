@@ -42,6 +42,7 @@ function App() {
   const [showConfig, setShowConfig] = useState(false)
   const [tempConfig, setTempConfig] = useState<LMStudioConfig>(config)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -158,6 +159,10 @@ function App() {
       setMessages(prev => [...prev, errorMessage])
     } finally {
       setIsLoading(false)
+      // 送信後に入力欄にフォーカスを戻す
+      setTimeout(() => {
+        inputRef.current?.focus()
+      }, 100)
     }
   }
 
@@ -332,6 +337,7 @@ function App() {
       <div className="bg-white p-4 border-t border-gray-200 shadow-lg shrink-0">
         <div className="flex gap-3 items-end">
           <textarea
+            ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
