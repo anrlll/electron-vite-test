@@ -299,8 +299,13 @@ function App() {
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`flex mb-4 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            className={`flex mb-4 items-end gap-2 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
+            {message.role === 'user' && (
+              <div className="text-xs text-gray-500 mb-1">
+                {message.timestamp.toLocaleTimeString()}
+              </div>
+            )}
             <div
               className={`max-w-[70%] px-4 py-3 rounded-xl shadow-sm ${
                 message.role === 'user' 
@@ -311,12 +316,12 @@ function App() {
               <div className="whitespace-pre-wrap break-words text-sm leading-relaxed">
                 {message.content}
               </div>
-              <div className={`text-xs mt-2 ${
-                message.role === 'user' ? 'text-white/70' : 'text-gray-500'
-              }`}>
+            </div>
+            {message.role === 'assistant' && (
+              <div className="text-xs text-gray-500 mb-1">
                 {message.timestamp.toLocaleTimeString()}
               </div>
-            </div>
+            )}
           </div>
         ))}
         {isLoading && (
