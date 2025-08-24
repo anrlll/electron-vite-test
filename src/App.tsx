@@ -217,28 +217,28 @@ function App() {
   return (
     <div className="flex flex-col w-screen h-screen bg-gray-100 overflow-hidden font-sans">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 shadow-lg shrink-0">
+      <div className="bg-gray-500 text-white p-4 shadow-lg shrink-0">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-xl font-bold m-0">LM Studio Chat</h1>
+            <h1 className="text-xl font-bold m-0">ChatSystemDemo</h1>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={toggleConfigPanel}
-              className="px-3 py-2 bg-white/20 hover:bg-white/30 text-white rounded-md text-sm font-medium transition-colors duration-200"
+              className="px-3 py-2 bg-white/20 hover:bg-white/30 text-white rounded-md text-sm font-medium transition-colors duration-200 cursor-pointer"
             >
               {showConfig ? '閉じる' : '設定'}
             </button>
             <button
               onClick={testConnection}
               disabled={isLoading}
-              className="px-3 py-2 bg-white/20 hover:bg-white/30 text-white rounded-md text-sm font-medium transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="px-3 py-2 bg-white/20 hover:bg-white/30 text-white rounded-md text-sm font-medium transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
             >
               接続テスト
             </button>
             <button
               onClick={clearChat}
-              className="px-3 py-2 bg-white/20 hover:bg-white/30 text-white rounded-md text-sm font-medium transition-colors duration-200"
+              className="px-3 py-2 bg-white/20 hover:bg-white/30 text-white rounded-md text-sm font-medium transition-colors duration-200 cursor-pointer"
             >
               クリア
             </button>
