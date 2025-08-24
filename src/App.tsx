@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react'
-import './App.css'
 
 interface Message {
   id: string
@@ -15,7 +14,7 @@ interface LMStudioConfig {
 
 const DEFAULT_CONFIG: LMStudioConfig = {
   baseUrl: 'http://localhost:1234',
-  model: 'local-model' // LM Studioで読み込まれているモデル名
+  model: 'local-model'
 }
 
 // LocalStorageのキー名（Electronアプリなので設定を保存）
@@ -26,7 +25,6 @@ function App() {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [config, setConfig] = useState<LMStudioConfig>(() => {
-    // 初期化時にlocalStorageから設定を読み込む
     try {
       const savedConfig = localStorage.getItem(CONFIG_STORAGE_KEY)
       if (savedConfig) {
@@ -56,7 +54,6 @@ function App() {
   // APIURL設定を保存する関数
   const saveConfig = () => {
     try {
-      // 空文字列の場合はデフォルト値を使用
       const finalConfig = {
         baseUrl: tempConfig.baseUrl.trim() || DEFAULT_CONFIG.baseUrl,
         model: tempConfig.model.trim() || DEFAULT_CONFIG.model
@@ -94,7 +91,6 @@ function App() {
     setMessages(prev => [...prev, resetMessage])
   }
 
-  // 設定パネルを開く時に現在の設定を一時設定にコピー
   const toggleConfigPanel = () => {
     if (!showConfig) {
       setTempConfig(config)
@@ -117,7 +113,6 @@ function App() {
     setIsLoading(true)
 
     try {
-      // 現在の設定を使用してAPIエンドポイントを構築
       const apiUrl = config.baseUrl.endsWith('/') 
         ? `${config.baseUrl}v1/chat/completions`
         : `${config.baseUrl}/v1/chat/completions`
@@ -190,9 +185,6 @@ function App() {
       })
 
       if (response.type === 'json' && response.data) {
-        const models = response.data.data || []
-        const modelList = models.map((m: any) => m.id || m.name || '不明').join(', ')
-        
         const connectionMessage: Message = {
           id: Date.now().toString(),
           role: 'assistant',
@@ -217,31 +209,140 @@ function App() {
     }
   }
 
+  // アプリケーション全体のスタイル
+  const appStyle: React.CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100vw',
+    height: '100vh',
+    backgroundColor: '#f3f4f6',
+    overflow: 'hidden',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+  }
+
+  // ヘッダーのスタイル
+  const headerStyle: React.CSSProperties = {
+    background: 'linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%)',
+    color: 'white',
+    padding: '16px',
+    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+    flexShrink: 0
+  }
+
+  // 設定パネルのスタイル
+  const configPanelStyle: React.CSSProperties = {
+    backgroundColor: 'white',
+    padding: '16px',
+    borderBottom: '1px solid #e5e7eb',
+    boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+    flexShrink: 0
+  }
+
+  // メッセージエリアのスタイル
+  const messagesAreaStyle: React.CSSProperties = {
+    flex: 1,
+    overflowY: 'auto',
+    padding: '16px',
+    minHeight: 0,
+    scrollbarWidth: 'thin'
+  }
+
+  // 入力エリアのスタイル
+  const inputAreaStyle: React.CSSProperties = {
+    backgroundColor: 'white',
+    padding: '16px',
+    borderTop: '1px solid #e5e7eb',
+    boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1)',
+    flexShrink: 0
+  }
+
+  // ボタンの基本スタイル
+  const buttonBaseStyle: React.CSSProperties = {
+    padding: '8px 12px',
+    borderRadius: '6px',
+    border: 'none',
+    fontSize: '14px',
+    fontWeight: '500',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease-in-out',
+    fontFamily: 'inherit'
+  }
+
+  // ヘッダーボタンのスタイル
+  const headerButtonStyle: React.CSSProperties = {
+    ...buttonBaseStyle,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    color: 'white',
+    marginLeft: '8px'
+  }
+
+  // 送信ボタンのスタイル
+  const sendButtonStyle: React.CSSProperties = {
+    ...buttonBaseStyle,
+    backgroundColor: isLoading || !input.trim() ? '#9ca3af' : '#3b82f6',
+    color: 'white',
+    padding: '10px 24px',
+    cursor: isLoading || !input.trim() ? 'not-allowed' : 'pointer'
+  }
+
+  // テキストエリアのスタイル
+  const textareaStyle: React.CSSProperties = {
+    flex: 1,
+    border: '1px solid #d1d5db',
+    borderRadius: '8px',
+    padding: '8px 12px',
+    resize: 'none',
+    outline: 'none',
+    fontSize: '14px',
+    lineHeight: '1.5',
+    minHeight: '40px',
+    maxHeight: '128px',
+    fontFamily: 'inherit',
+    marginRight: '12px'
+  }
+
+  // 入力フィールドのスタイル
+  const inputFieldStyle: React.CSSProperties = {
+    width: '100%',
+    border: '1px solid #d1d5db',
+    borderRadius: '6px',
+    padding: '8px 12px',
+    fontSize: '14px',
+    outline: 'none',
+    fontFamily: 'inherit'
+  }
+
   return (
-    <div className="flex flex-col w-full h-screen bg-gray-100 overflow-hidden">
+    <div style={appStyle}>
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 shadow-lg flex-shrink-0">
-        <div className="flex justify-between items-center">
+      <div style={headerStyle}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <h1 className="text-xl font-bold">LM Studio Chat</h1>
+            <h1 style={{ fontSize: '20px', fontWeight: 'bold', margin: 0 }}>LM Studio Chat</h1>
           </div>
-          <div className="flex gap-2 mr-4">
+          <div style={{ display: 'flex', alignItems: 'center' }}>
             <button
               onClick={toggleConfigPanel}
-              className="px-3 py-1 bg-white bg-opacity-20 hover:bg-opacity-30 rounded transition-colors text-sm"
+              style={headerButtonStyle}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.3)'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)'}
             >
               {showConfig ? '閉じる' : '設定'}
             </button>
             <button
               onClick={testConnection}
-              className="px-3 py-1 bg-white bg-opacity-20 hover:bg-opacity-30 rounded transition-colors text-sm"
+              style={{...headerButtonStyle, opacity: isLoading ? 0.6 : 1}}
               disabled={isLoading}
+              onMouseEnter={(e) => !isLoading && (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.3)')}
+              onMouseLeave={(e) => !isLoading && (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)')}
             >
               接続テスト
             </button>
             <button
               onClick={clearChat}
-              className="px-3 py-1 bg-white bg-opacity-20 hover:bg-opacity-30 rounded transition-colors text-sm"
+              style={headerButtonStyle}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.3)'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)'}
             >
               クリア
             </button>
@@ -251,93 +352,146 @@ function App() {
 
       {/* Config Panel */}
       {showConfig && (
-        <div className="bg-white p-4 border-b border-gray-200 shadow-sm flex-shrink-0">
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block font-medium text-sm mb-2">API URL:</label>
-                <input
-                  type="text"
-                  value={tempConfig.baseUrl}
-                  onChange={(e) => setTempConfig({...tempConfig, baseUrl: e.target.value})}
-                  placeholder={DEFAULT_CONFIG.baseUrl}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  空の場合: {DEFAULT_CONFIG.baseUrl} を使用
-                </p>
-              </div>
-              <div>
-                <label className="block font-medium text-sm mb-2">モデル名:</label>
-                <input
-                  type="text"
-                  value={tempConfig.model}
-                  onChange={(e) => setTempConfig({...tempConfig, model: e.target.value})}
-                  placeholder={DEFAULT_CONFIG.model}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  空の場合: {DEFAULT_CONFIG.model} を使用
-                </p>
-              </div>
+        <div style={configPanelStyle}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px', marginBottom: '16px' }}>
+            <div>
+              <label style={{ display: 'block', fontWeight: '500', fontSize: '14px', marginBottom: '8px' }}>
+                API URL:
+              </label>
+              <input
+                type="text"
+                value={tempConfig.baseUrl}
+                onChange={(e) => setTempConfig({...tempConfig, baseUrl: e.target.value})}
+                placeholder={DEFAULT_CONFIG.baseUrl}
+                style={inputFieldStyle}
+              />
+              <p style={{ fontSize: '12px', color: '#6b7280', margin: '4px 0 0 0' }}>
+                空の場合: {DEFAULT_CONFIG.baseUrl} を使用
+              </p>
             </div>
-            <div className="flex gap-2 pt-2">
-              <button
-                onClick={saveConfig}
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors text-sm"
-              >
-                保存
-              </button>
-              <button
-                onClick={resetConfig}
-                className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors text-sm"
-              >
-                デフォルトに戻す
-              </button>
-              <button
-                onClick={() => setShowConfig(false)}
-                className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors text-sm"
-              >
-                キャンセル
-              </button>
-            </div>
+          </div>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button
+              onClick={saveConfig}
+              style={{
+                ...buttonBaseStyle,
+                backgroundColor: '#3b82f6',
+                color: 'white'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2563eb'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3b82f6'}
+            >
+              保存
+            </button>
+            <button
+              onClick={resetConfig}
+              style={{
+                ...buttonBaseStyle,
+                backgroundColor: '#6b7280',
+                color: 'white'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4b5563'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#6b7280'}
+            >
+              デフォルトに戻す
+            </button>
+            <button
+              onClick={() => setShowConfig(false)}
+              style={{
+                ...buttonBaseStyle,
+                backgroundColor: '#d1d5db',
+                color: '#374151'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#9ca3af'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#d1d5db'}
+            >
+              キャンセル
+            </button>
           </div>
         </div>
       )}
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
+      <div style={messagesAreaStyle}>
         {messages.length === 0 && (
-          <div className="text-center text-gray-500">
-            <p className="text-lg">会話を開始しましょう！</p>
+          <div style={{ textAlign: 'center', color: '#6b7280', marginTop: '40px' }}>
+            <p style={{ fontSize: '18px', margin: 0 }}>会話を開始しましょう！</p>
           </div>
         )}
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            style={{
+              display: 'flex',
+              justifyContent: message.role === 'user' ? 'flex-end' : 'flex-start',
+              marginBottom: '16px'
+            }}
           >
             <div
-              className={`max-w-xs lg:max-w-md xl:max-w-lg px-4 py-3 rounded-lg shadow-sm ${
-                message.role === 'user'
-                  ? 'bg-blue-500 text-white rounded-br-sm'
-                  : 'bg-white text-gray-800 border border-gray-200 rounded-bl-sm'
-              }`}
+              style={{
+                maxWidth: '70%',
+                padding: '12px 16px',
+                borderRadius: '12px',
+                boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+                backgroundColor: message.role === 'user' ? '#3b82f6' : 'white',
+                color: message.role === 'user' ? 'white' : '#1f2937',
+                border: message.role === 'assistant' ? '1px solid #e5e7eb' : 'none',
+                borderBottomRightRadius: message.role === 'user' ? '4px' : '12px',
+                borderBottomLeftRadius: message.role === 'assistant' ? '4px' : '12px'
+              }}
             >
-              <div className="whitespace-pre-wrap break-words text-sm leading-relaxed">{message.content}</div>
-              <div className={`text-xs mt-2 ${message.role === 'user' ? 'text-blue-100' : 'text-gray-500'}`}>
+              <div style={{
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+                fontSize: '14px',
+                lineHeight: '1.5'
+              }}>
+                {message.content}
+              </div>
+              <div style={{
+                fontSize: '12px',
+                marginTop: '8px',
+                color: message.role === 'user' ? 'rgba(255, 255, 255, 0.7)' : '#6b7280'
+              }}>
                 {message.timestamp.toLocaleTimeString()}
               </div>
             </div>
           </div>
         ))}
         {isLoading && (
-          <div className="flex justify-start">
-            <div className="bg-white text-gray-800 max-w-xs lg:max-w-md px-4 py-3 rounded-lg rounded-bl-sm border border-gray-200 shadow-sm">
-              <div className="flex items-center space-x-1">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+          <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '16px' }}>
+            <div style={{
+              backgroundColor: 'white',
+              color: '#1f2937',
+              maxWidth: '70%',
+              padding: '12px 16px',
+              borderRadius: '12px',
+              borderBottomLeftRadius: '4px',
+              border: '1px solid #e5e7eb',
+              boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <div style={{
+                  width: '8px',
+                  height: '8px',
+                  backgroundColor: '#9ca3af',
+                  borderRadius: '50%',
+                  animation: 'bounce 1.4s infinite ease-in-out'
+                }}></div>
+                <div style={{
+                  width: '8px',
+                  height: '8px',
+                  backgroundColor: '#9ca3af',
+                  borderRadius: '50%',
+                  animation: 'bounce 1.4s infinite ease-in-out 0.16s'
+                }}></div>
+                <div style={{
+                  width: '8px',
+                  height: '8px',
+                  backgroundColor: '#9ca3af',
+                  borderRadius: '50%',
+                  animation: 'bounce 1.4s infinite ease-in-out 0.32s'
+                }}></div>
               </div>
             </div>
           </div>
@@ -346,8 +500,8 @@ function App() {
       </div>
 
       {/* Input Area */}
-      <div className="bg-white p-4 border-t border-gray-200 shadow-lg flex-shrink-0">
-        <div className="flex gap-3 items-end">
+      <div style={inputAreaStyle}>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-end' }}>
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -355,21 +509,46 @@ function App() {
             placeholder="メッセージを入力してください... (Enter: 送信, Shift+Enter: 改行)"
             disabled={isLoading}
             rows={2}
-            className="flex-1 border border-gray-300 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm leading-relaxed max-h-32 min-h-[2.5rem]"
             style={{
-              scrollbarWidth: 'thin',
-              scrollbarColor: '#cbd5e1 transparent'
+              ...textareaStyle,
+              opacity: isLoading ? 0.6 : 1
             }}
+            onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+            onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
           />
           <button
             onClick={sendMessage}
             disabled={!input.trim() || isLoading}
-            className="px-6 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+            style={sendButtonStyle}
+            onMouseEnter={(e) => {
+              if (!isLoading && input.trim()) {
+                e.currentTarget.style.backgroundColor = '#2563eb'
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isLoading && input.trim()) {
+                e.currentTarget.style.backgroundColor = '#3b82f6'
+              }
+            }}
           >
             送信
           </button>
         </div>
       </div>
+
+      {/* CSS for bounce animation */}
+      <style>{`
+        @keyframes bounce {
+          0%, 80%, 100% {
+            transform: scale(0.8);
+            opacity: 0.5;
+          }
+          40% {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+      `}</style>
     </div>
   )
 }
