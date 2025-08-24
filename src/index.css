@@ -1,3 +1,5 @@
+@import 'tailwindcss';
+
 /* 最小限のリセットのみ */
 * {
   margin: 0;
